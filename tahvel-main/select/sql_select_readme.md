@@ -10,8 +10,9 @@ Kõik päringud on salvestatud faili **`SELECT.sql`**, mille tulemused saab suun
 
 ### 1. Laadi projekt alla
 ```bash
-git clone https://github.com/<sinu_kasutajanimi>/<repo_nimi>.git
-cd <repo_nimi>
+git clone https://github.com/Sillyapplecat/Tahvel.git
+cd Tahvel/tahvel-main/select
+
 ```
 
 ### 2. Veendu, et Docker töötab
@@ -88,10 +89,3 @@ Kõik päringud:
 - töötavad ilma vigadeta;
 - vastavad kõikidele ülesande kriteeriumidele;
 - on kommenteeritud ja struktureeritud eesti keeles.
-
----
-
-🖋️ **Autor:** _<Sinu nimi>_  
-🗕️ **Kuupäev:** 2025  
-🏩 **Projekt:** SQL SELECT Päringute Harjutus
-
