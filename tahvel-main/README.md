@@ -484,34 +484,3 @@ docker exec -it tahvel_mariadb mysql -ustudent -pPassw0rd tahvel -e "SET FOREIGN
 docker exec -it tahvel_seeder bun run seed.ts
 ```
 
-## ❓ KKK (Korduma Kippuvad Küsimused)
-
-### Miks on kolm Alpine Linuxi kihti (host + konteinrid)?
-- **Host Alpine**: Sinu virtuaalmasin, kus jookseb Docker Engine
-- **Konteineri Alpine**: Isoleeritud keskkonnad (seeder, phpMyAdmin)
-Iga konteiner on eraldatud, kuigi nad kõik kasutavad Alpine Linuxi. See on normaalne Docker arhitektuur!
-
-### Kas ma pean oskama Alpine Linuxi käske?
-Jah, põhilised Alpine käsud on kasulikud:
-- `apk` - package manager (nagu `apt` Debian/Ubuntu-s)
-- `rc-service` - teenuste haldus
-- `rc-update` - autostart haldus
-- `sh` - Alpine default shell (mitte bash!)
-
-### Mis on Bun ja miks mitte Node.js?
-Bun on kiire, moodne JavaScript/TypeScript runtime. Alpine image on väiksem (~90MB vs ~500MB) ja Bun on kiirem kui Node.js. Ideaalne suurandmete töötlemiseks!
-
-### Kas Docker Desktop on vaja?
-**EI!** Sinu Alpine VM kasutab **Docker Engine** (native Linux Docker). Docker Desktop on ainult Windowsi/macOS-i jaoks. Alpine Linuxis jookseb "päris" Docker!
-
-## 📝 Litsents
-
-See projekt on õppeotstarbeline demonstratsioon.
-
-## 👤 Autor
-
-**teetvikk** - [GitHub](https://github.com/teetvikk)
-
----
-
-**Valmis kasutamiseks!** 🚀
