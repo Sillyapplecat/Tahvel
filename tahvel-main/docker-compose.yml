@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  mariadb:
+    image: mysql:8.0
+    container_name: tahvel_mariadb
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql
+    networks:
+      - tahvel_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    command:
+      - --default-authentication-plugin=mysql_native_password
+      - --max_allowed_packet=256M
+      - --innodb_buffer_pool_size=512M
+      - --innodb_log_file_size=128M
+      - --innodb_flush_log_at_trx_commit=2
+      - --innodb_use_native_aio=0
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: tahvel_phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mariadb
+      PMA_USER: ${MYSQL_USER}
+      PMA_PASSWORD: ${MYSQL_PASSWORD}
+      UPLOAD_LIMIT: 256M
+    ports:
+      - "8080:80"
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    networks:
+      - tahvel_network
+
+  seeder:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tahvel_seeder
+    environment:
+      DB_HOST: mariadb
+      DB_PORT: 3306
+      DB_USER: ${MYSQL_USER}
+      DB_PASSWORD: ${MYSQL_PASSWORD}
+      DB_NAME: ${MYSQL_DATABASE}
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    networks:
+      - tahvel_network
+    volumes:
+      - ./seed.ts:/app/seed.ts
+      - ./package.json:/app/package.json
+      - seeder_node_modules:/app/node_modules
+    command: tail -f /dev/null
+
+volumes:
+  mysql_data:
+  seeder_node_modules:
+
+networks:
+  tahvel_network:
+    driver: bridge
